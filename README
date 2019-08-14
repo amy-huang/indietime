@@ -1,0 +1,3 @@
+https://docs.docker.com/compose/gettingstarted/
+
+Use operator sdk to make an operator in helm, go, ansible that all do the same thing - support a web application that I can then attempt to mess up
