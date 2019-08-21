@@ -8,19 +8,37 @@ spec:
       labels:
         app: webapp
     spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: app-config
       containers:
-      - image: xcoulon/go-url-shortener:0.1.0
+      - image: xcoulon/go-url-shortener:0.2.0
         name: go-url-shortener
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+        ports:
+        - containerPort: 8080
         env:
         - name: POSTGRES_HOST
           value: postgres
         - name: POSTGRES_PORT
           value: "5432"
+        - name: CONFIG_FILE
+          value: /etc/config/config.yaml
         - name: POSTGRES_DATABASE
-          value: url_shortener_db
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: dbname
         - name: POSTGRES_USER
-          value: user
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: username
         - name: POSTGRES_PASSWORD
-          value: mysecretpassword
-        ports:
-        - containerPort: 8080
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: password
